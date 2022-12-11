@@ -14,6 +14,10 @@ class User extends Sequelize.Model {
                 allowNull: false,
                 type: Sequelize.STRING(50)
             },
+            user_name: {
+                allowNull: false,
+                type: Sequelize.STRING(20)
+            },
             user_password: {
                 allowNull: false,
                 type: Sequelize.STRING(36)
@@ -25,7 +29,11 @@ class User extends Sequelize.Model {
             }, user_refresh: {
                 allowNull: false,
                 defaultValue: "",
-                type: Sequelize.STRING(400)
+                type: Sequelize.STRING(200)
+            }, user_wallet_address: {
+                allowNull: false,
+                defaultValue: "",
+                type: Sequelize.STRING(45)
             }
         }, {
             sequelize,
