@@ -42,7 +42,7 @@ export const App = () => {
         <Route path={"*"} element={<NotFound/>}/>
 
       </Routes>
-    <LargeWithAppLinksAndSocial />
+    {/* <LargeWithAppLinksAndSocial /> */}
    </ChakraProvider>
 
   )

@@ -72,6 +72,8 @@ import Team from '../components/Team';
           />
         </Flex>
       </Stack>
+      {/* <Vision/> */}
+      {/* roadmap img */}
       <Team/>
       <CardWithIllustration/>
       <Partners/>

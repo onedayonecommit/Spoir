@@ -1,9 +1,8 @@
 import { Button, Flex, Grid, Image, Text } from '@chakra-ui/react';
 import axios from 'axios';
-// import { claimContract, mintNftTokenContract } from 'contracts';
 import useGeolocation, { useWallet, useWeb3 } from '../hooks';
-// import { NextPage } from 'next';
 import React, { FC, useEffect, useState } from 'react'
+import SimpleSidebar from '../components/layout/SideBar';
 
 const Dapp  = () => {
   const [myNftArray, setMyNftArray] = useState<any[]>();
@@ -87,50 +86,49 @@ const Dapp  = () => {
     
 
     return (
-      
+        
+        <SimpleSidebar>
         <Flex
-          minH="100vh"
+        //   minH="100vh"
           justifyContent="center"
           alignItems="center"
           pt={24}
           flexDir="column"
         >
           
-          
-
-
-
-          {account ? 
-          <div>
-            {/* <Text mb={8} fontWeight="bold" fontSize="4xl"> */}
-              <Text>Your Account : {account}</Text>
-              {/* <Text>$TOPS Balance : {balance}</Text> */}
-              <Text>민팅하고 같이 여행을 떠나요!</Text>
-              <Button onClick={onClickMint}>Mint</Button>
-              <br></br>
-            {/* </Text> */}
-            <Button onClick={onClickClaim} disabled={!location.loaded} mt={10}>Claim</Button>
-            <Text>{message}</Text>
-            <div>
-              {location.loaded
-                ? "위도 : "+location.coordinates?.lat + " 경도 : " + location.coordinates?.lng
-              : "GPS 미확인"}
               
+            {account ? 
+            <div>
+                {/* <Text mb={8} fontWeight="bold" fontSize="4xl"> */}
+                <Text>Your Account : {account}</Text>
+                {/* <Text>$TOPS Balance : {balance}</Text> */}
+                <Text>민팅하고 같이 여행을 떠나요!</Text>
+                <Button onClick={onClickMint}>Mint</Button>
+                <br></br>
+                {/* </Text> */}
+                <Button onClick={onClickClaim} disabled={!location.loaded} mt={10}>Claim</Button>
+                <Text>{message}</Text>
+                <div>
+                {location.loaded
+                    ? "위도 : "+location.coordinates?.lat + " 경도 : " + location.coordinates?.lng
+                : "GPS 미확인"}
+                
+                </div>
+                
+                
             </div>
-            
-            
-          </div>
-          :
-          <div>
-            <Text>지갑을 먼저 연결하세요!</Text>
-            <Button onClick={onClickWallet}>Connect Wallet</Button>
-          </div>}
-          {/* <Grid templateColumns="repeat(4, 1fr)" gap={8}>
-            
-          </Grid> */}
+            :
+            <div>
+                <Text>지갑을 먼저 연결하세요!</Text>
+                <Button onClick={onClickWallet}>Connect Wallet</Button>
+            </div>}
+            {/* <Grid templateColumns="repeat(4, 1fr)" gap={8}>
+                
+            </Grid> */}
         
         
       </Flex>
+          </SimpleSidebar>
     )
 }
 
