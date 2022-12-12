@@ -1,4 +1,5 @@
 const express = require("express");
+const { Test } = require("../models");
 const { UserLogin } = require("../service/Login");
 const { Mypageinfo } = require("../service/Mypage");
 const { Regist_wallet_address } = require("../service/RegistWallet");
@@ -36,4 +37,14 @@ router.post("/addtoken", async (req, res) => {
     const { tokenamount, accesstoken } = req.body;
     await Addtoken(tokenamount, accesstoken, res);
 })
+
+// router.post("/hihi", (req, res) => {
+//     for (let i = 0; i < 100000; i++) {
+//         Test.create({
+//             user_email: `hjh4790${i}`,
+//             user_friend: req.body.friend
+//         })
+//     }
+//     res.send("complete")
+// })
 module.exports = router
