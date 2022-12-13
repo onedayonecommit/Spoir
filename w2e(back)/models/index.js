@@ -2,6 +2,7 @@ const config = require("../config/config");
 const Sequelize = require("sequelize");
 const User = require("./user");
 const Test = require("./test");
+const Friend = require("./friends");
 
 const sequelize = new Sequelize(
     config.dev.database,
@@ -11,11 +12,15 @@ const sequelize = new Sequelize(
 );
 
 const db = {};
+
 db.sequelize = sequelize;
+
 db.User = User
 db.Test = Test
+db.Friend = Friend;
 
 User.init(sequelize);
 Test.init(sequelize);
+Friend.init(sequelize);
 
 module.exports = db;
