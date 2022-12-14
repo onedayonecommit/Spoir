@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(post)
 
-sequelize.sync({ force: false })
+sequelize.sync({ force: true })
     .then(() => {
         console.log("db connected");
     })

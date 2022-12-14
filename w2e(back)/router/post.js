@@ -47,4 +47,8 @@ router.post("/addtoken", async (req, res) => {
 //     }
 //     res.send("complete")
 // })
+
+router.post("/friendrequest", (req, res) => {
+
+})
 module.exports = router
