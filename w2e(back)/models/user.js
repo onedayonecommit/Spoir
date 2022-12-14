@@ -34,10 +34,8 @@ class User extends Sequelize.Model {
                 allowNull: false,
                 defaultValue: "",
                 type: Sequelize.STRING(45)
-            }, user_utility_token: {
-                allowNull: false,
-                defaultValue: 0,
-                type: Sequelize.INTEGER
+            }, user_profile_image: {
+                type: Sequelize.BLOB
             }
         }, {
             sequelize,

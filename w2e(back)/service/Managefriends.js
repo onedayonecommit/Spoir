@@ -2,7 +2,8 @@ const { where } = require("sequelize");
 const { Friend } = require("../models");
 const { Checkaccesstoken } = require("./Jwtcheck")
 
-module.exports.Addfriend = async (accesstoken, user_friend, res) => {
+/** 친구 요청 함수 */
+module.exports.Requestaddfriend = async (accesstoken, user_friend, res) => {
     const user_email = await Checkaccesstoken(accesstoken);
     if (user_email !== false) {
         Friend.create({ user_email, user_friend }).then((e) => {
@@ -14,6 +15,7 @@ module.exports.Addfriend = async (accesstoken, user_friend, res) => {
     }
 }
 
+/** 친구 요청 수락 함수 */
 module.exports.Acceptaddfriend = async (accesstoken, user_email, res) => {
     const user_friend = await Checkaccesstoken(accesstoken);
     if (user_friend !== false) {
@@ -25,6 +27,7 @@ module.exports.Acceptaddfriend = async (accesstoken, user_email, res) => {
     }
 }
 
+/** 친구 요청 거절 함수 */
 module.exports.Refuseaddfriend = async (accesstoken, user_email, res) => {
     const user_friend = await Checkaccesstoken(accesstoken);
     if (user_friend !== false) {

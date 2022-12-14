@@ -1,6 +1,10 @@
 const express = require("express");
-const { Test } = require("../models");
+const { Test, Friend } = require("../models");
+const { Checkmail } = require("../service/Checkemail");
+const { GenerateRandomAuth } = require("../service/Generateauth");
 const { UserLogin } = require("../service/Login");
+const { Requestaddfriend, Acceptaddfriend, Refuseaddfriend } = require("../service/Managefriends");
+const { MyfriendsSearch } = require("../service/Myfriendsearch");
 const { Mypageinfo } = require("../service/Mypage");
 const { Regist_wallet_address } = require("../service/RegistWallet");
 const { SignUp } = require("../service/Signup");
@@ -32,23 +36,71 @@ router.post("/mypage-info", async (req, res) => {
     await Mypageinfo(accesstoken, res)
 })
 
-/** 스팟에서 토큰 받아서 누적시키는 함수 */
-router.post("/addtoken", async (req, res) => {
-    const { tokenamount, accesstoken } = req.body;
-    await Addtoken(tokenamount, accesstoken, res);
-})
-
-// router.post("/hihi", (req, res) => {
-//     for (let i = 0; i < 100000; i++) {
-//         Test.create({
-//             user_email: `hjh4790${i}`,
-//             user_friend: req.body.friend
-//         })
-//     }
-//     res.send("complete")
+/** 스팟에서 토큰 받아서 DB에 토큰 갯수 저장 */
+// router.post("/addtoken", async (req, res) => {
+//     const { tokenamount, accesstoken } = req.body;
+//     await Addtoken(tokenamount, accesstoken, res);
 // })
 
-router.post("/friendrequest", (req, res) => {
-
+/** 친구 추가 테스트 */
+router.post("/testaddfriend", (req, res) => {
+    // for (let i = 0; i < 100; i++) {
+    //     Friend.create({
+    //         user_email: req.body.user_email,
+    //         user_friend: `hjh4790${i}`
+    //     })
+    // }
+    Friend.create({
+        user_email: req.body.user_email,
+        user_friend: "a123"
+    })
+    Friend.create({
+        user_email: req.body.user_email,
+        user_friend: "c123"
+    })
+    Friend.create({
+        user_email: req.body.user_email,
+        user_friend: "b123"
+    })
+    res.send("complete")
 })
+
+/** 친구 요청 발송 */
+router.post("/friend/request", async (req, res) => {
+    const { accesstoken, user_friend } = req.body;
+    await Requestaddfriend(accesstoken, user_friend, res);
+})
+
+/** 친구 요청 수락 */
+router.post("/friend/accept", async (req, res) => {
+    const { accesstoken, user_email } = req.body;
+    await Acceptaddfriend(accesstoken, user_email, res);
+})
+
+/** 친구 요청 거절 */
+router.post("/friend/refuse", async (req, res) => {
+    const { accesstoken, user_email } = req.body;
+    await Refuseaddfriend(accesstoken, user_email, res);
+})
+
+/** 회원가입 전 메일 중복확인 및 인증번호 발송 */
+router.post("/check/email", async (req, res) => {
+    const { user_email } = req.body;
+    mailoption = {
+        to: user_email,
+        subject: "tripot 메일 인증번호 입니다.",
+        text: `반갑습니다 Tripot 입니다. 아래 인증번호 6자리 입력바랍니다. /br <h1>${GenerateRandomAuth()}</h1>`
+    }
+    await Checkmail(mailoption, res);
+})
+
+router.post("/myfriends/search", (req, res) => {
+    const { user_email } = req.body;
+    MyfriendsSearch(user_email, res)
+})
+// router.post("/test", (req, res) => {
+//     const { hi } = req.body
+//     console.log(hi)
+//     res.send("hihi")
+// })
 module.exports = router
