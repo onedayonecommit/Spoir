@@ -1,5 +1,5 @@
 const express = require("express");
-const { Test, Friend } = require("../models");
+const { Test, Friend, User } = require("../models");
 const { Checkmail } = require("../service/Checkemail");
 const { GenerateRandomAuth } = require("../service/Generateauth");
 const { UserLogin } = require("../service/Login");
@@ -98,9 +98,25 @@ router.post("/myfriends/search", (req, res) => {
     const { user_email } = req.body;
     MyfriendsSearch(user_email, res)
 })
-// router.post("/test", (req, res) => {
-//     const { hi } = req.body
-//     console.log(hi)
-//     res.send("hihi")
-// })
+router.post("/test", (req, res) => {
+
+    User.create({
+        user_email: "a123",
+        user_name: "heo",
+        user_password: "1234",
+        user_profile_image: "/uss/image/heo.png"
+    })
+    User.create({
+        user_email: "c123",
+        user_name: "kim",
+        user_password: "1234",
+        user_profile_image: "/uss/image/kim.png"
+    })
+    User.create({
+        user_email: "b123",
+        user_name: "lee",
+        user_password: "1234",
+        user_profile_image: "/uss/image/lee.png"
+    })
+})
 module.exports = router
