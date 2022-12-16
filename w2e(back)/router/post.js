@@ -14,8 +14,8 @@ const router = express.Router();
 // router.use(express.json());
 /** 회원가입 */
 router.post("/signup", async (req, res) => {
-    const { user_email, user_password, user_name } = req.body;
-    await SignUp(user_email, user_password, user_name, res);
+    const { user_email, user_name } = req.body;
+    await SignUp(user_email, user_name, res);
 })
 
 /** 로그인 */

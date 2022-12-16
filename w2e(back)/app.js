@@ -8,7 +8,7 @@ app.use(express.json());
 app.use(cors());
 app.use(post)
 
-sequelize.sync({ force: true })
+sequelize.sync({ force: false })
     .then(() => {
         console.log("db connected");
     })

@@ -15,12 +15,8 @@ class User extends Sequelize.Model {
                 type: Sequelize.STRING(50)
             },
             user_name: {
-                allowNull: false,
+                allowNull: true,
                 type: Sequelize.STRING(20)
-            },
-            user_password: {
-                allowNull: false,
-                type: Sequelize.STRING(36)
             },
             user_phone: {
                 allowNull: false,
@@ -35,7 +31,8 @@ class User extends Sequelize.Model {
                 defaultValue: "",
                 type: Sequelize.STRING(45)
             }, user_profile_image: {
-                type: Sequelize.BLOB("long")
+                type: Sequelize.BLOB("long"),
+                allowNull: true
             }
         }, {
             sequelize,
