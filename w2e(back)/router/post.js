@@ -43,27 +43,16 @@ router.post("/mypage-info", async (req, res) => {
 // })
 
 /** 친구 추가 테스트 */
-router.post("/testaddfriend", (req, res) => {
-    // for (let i = 0; i < 100; i++) {
-    //     Friend.create({
-    //         user_email: req.body.user_email,
-    //         user_friend: `hjh4790${i}`
-    //     })
-    // }
-    Friend.create({
-        user_email: req.body.user_email,
-        user_friend: "a123"
-    })
-    Friend.create({
-        user_email: req.body.user_email,
-        user_friend: "c123"
-    })
-    Friend.create({
-        user_email: req.body.user_email,
-        user_friend: "b123"
-    })
-    res.send("complete")
-})
+// router.post("/testaddfriend", (req, res) => {
+//     // for (let i = 0; i < 100; i++) {
+//     //     Friend.create({
+//     //         user_email: req.body.user_email,
+//     //         user_friend: `hjh4790${i}`
+//     //     })
+//     // }
+
+//     res.send("complete")
+// })
 
 /** 친구 요청 발송 */
 router.post("/friend/request", async (req, res) => {
@@ -117,6 +106,18 @@ router.post("/test", (req, res) => {
         user_name: "lee",
         user_password: "1234",
         user_profile_image: "/uss/image/lee.png"
+    })
+    Friend.create({
+        user_email: req.body.user_email,
+        user_friend: "a123"
+    })
+    Friend.create({
+        user_email: req.body.user_email,
+        user_friend: "c123"
+    })
+    Friend.create({
+        user_email: req.body.user_email,
+        user_friend: "b123"
     })
 })
 module.exports = router
