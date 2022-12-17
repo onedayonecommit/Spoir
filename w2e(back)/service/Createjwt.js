@@ -6,7 +6,7 @@ module.exports.LoginAT = async (user_email) => {
             user_email
         }, process.env.AT_SIGN_KEY, {
             expiresIn: "1h",
-            issuer: "poobin"
+            issuer: "tripot"
         })
         return getAT
     } catch (error) {
@@ -20,9 +20,23 @@ module.exports.LoginRT = async (user_email) => {
             user_email
         }, process.env.RT_SIGN_KEY, {
             expiresIn: "14d",
-            issuer: "poobin"
+            issuer: "tripot"
         })
         return getRT
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+module.exports.SignupAT = async (user_email) => {
+    try {
+        const getSignupAT = await jwt.sign({
+            user_email
+        }, process.env.AT_SIGNUP_KEY, {
+            expiresIn: "1h",
+            issuer: "tripot"
+        })
+        return getSignupAT
     } catch (error) {
         console.log(error)
     }

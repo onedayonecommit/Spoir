@@ -3,10 +3,11 @@ const { sequelize } = require("./models");
 const post = require("./router/post");
 const app = express();
 const cors = require("cors");
-
+const dot = require("dotenv").config();
 app.use(express.json());
 app.use(cors());
 app.use(post)
+
 
 sequelize.sync({ force: false })
     .then(() => {
@@ -17,5 +18,5 @@ sequelize.sync({ force: false })
     });
 
 app.listen(8080, () => {
-    console.log("server on!")
+    console.log("8080 server on!")
 })

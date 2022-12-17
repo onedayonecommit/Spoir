@@ -1,5 +1,7 @@
 const express = require("express");
 const { Test, Friend, User } = require("../models");
+const { createClient } = require("redis");
+const { Addtest } = require("../service/Addtest");
 const { Checkmail } = require("../service/Checkemail");
 const { GenerateRandomAuth } = require("../service/Generateauth");
 const { UserLogin } = require("../service/Login");
@@ -9,9 +11,12 @@ const { Mypageinfo } = require("../service/Mypage");
 const { Regist_wallet_address } = require("../service/RegistWallet");
 const { SignUp } = require("../service/Signup");
 const { Addtoken } = require("../service/Tokenstack");
+const { SignupAT } = require("../service/Createjwt");
 const router = express.Router();
+const client = createClient();
+client.connect();
 
-// router.use(express.json());
+
 /** 회원가입 */
 router.post("/signup", async (req, res) => {
     const { user_email, user_name } = req.body;
@@ -36,24 +41,6 @@ router.post("/mypage-info", async (req, res) => {
     await Mypageinfo(accesstoken, res)
 })
 
-/** 스팟에서 토큰 받아서 DB에 토큰 갯수 저장 */
-// router.post("/addtoken", async (req, res) => {
-//     const { tokenamount, accesstoken } = req.body;
-//     await Addtoken(tokenamount, accesstoken, res);
-// })
-
-/** 친구 추가 테스트 */
-// router.post("/testaddfriend", (req, res) => {
-//     // for (let i = 0; i < 100; i++) {
-//     //     Friend.create({
-//     //         user_email: req.body.user_email,
-//     //         user_friend: `hjh4790${i}`
-//     //     })
-//     // }
-
-//     res.send("complete")
-// })
-
 /** 친구 요청 발송 */
 router.post("/friend/request", async (req, res) => {
     const { accesstoken, user_friend } = req.body;
@@ -75,49 +62,47 @@ router.post("/friend/refuse", async (req, res) => {
 /** 회원가입 전 메일 중복확인 및 인증번호 발송 */
 router.post("/check/email", async (req, res) => {
     const { user_email } = req.body;
+    const authnumber = GenerateRandomAuth();
+    // client.set(`${user_email}`, `${authnumber}`, "EX", 10, function (err, reply) {
+    //     if (err) res.status(400).send({ success: false });
+    // })
+    client.set(`${user_email}`, `${authnumber}`, {
+        EX: 30,
+        NX: true
+    });
     mailoption = {
-        to: user_email,
+        toEmail: user_email,
         subject: "tripot 메일 인증번호 입니다.",
-        text: `반갑습니다 Tripot 입니다. 아래 인증번호 6자리 입력바랍니다. /br <h1>${GenerateRandomAuth()}</h1>`
+        html: `반갑습니다 Tripot 입니다. 아래 인증번호 6자리 입력바랍니다. </br> <h1>${authnumber}</h1>`
     }
     await Checkmail(mailoption, res);
 })
 
-router.post("/myfriends/search", (req, res) => {
-    const { user_email } = req.body;
-    MyfriendsSearch(user_email, res)
+/** 인증번호 체크 */
+router.post("/check/authnumber", async (req, res) => {
+    const { user_email, authnumber } = req.body;
+    if (await client.get(user_email) == authnumber) {
+        res.send({
+            checkauthstatus: true,
+            signupchecktoken: await SignupAT(user_email)
+        })
+        client.flushAll()
+    }
+    else {
+        res.send({
+            checkauthstatus: false
+        })
+    }
 })
-router.post("/test", (req, res) => {
 
-    User.create({
-        user_email: "a123",
-        user_name: "heo",
-        user_password: "1234",
-        user_profile_image: "/uss/image/heo.png"
-    })
-    User.create({
-        user_email: "c123",
-        user_name: "kim",
-        user_password: "1234",
-        user_profile_image: "/uss/image/kim.png"
-    })
-    User.create({
-        user_email: "b123",
-        user_name: "lee",
-        user_password: "1234",
-        user_profile_image: "/uss/image/lee.png"
-    })
-    Friend.create({
-        user_email: req.body.user_email,
-        user_friend: "a123"
-    })
-    Friend.create({
-        user_email: req.body.user_email,
-        user_friend: "c123"
-    })
-    Friend.create({
-        user_email: req.body.user_email,
-        user_friend: "b123"
-    })
+/** 친구 목록 보내주기 */
+router.post("/myfriends/search", async (req, res) => {
+    const { user_email } = req.body;
+    await MyfriendsSearch(user_email, res)
+})
+
+/** 친구 추가 test */
+router.post("/test", (req, res) => {
+    Addtest()
 })
 module.exports = router

@@ -1,5 +1,5 @@
 const nodemailer = require('nodemailer');
-
+const dot = require("dotenv").config();
 // 메일발송 객체
 const mailSender = {
     // 메일발송 함수
@@ -20,7 +20,7 @@ const mailSender = {
             from: process.env.mailsender, // 보내는 메일의 주소
             to: param.toEmail, // 수신할 이메일
             subject: param.subject, // 메일 제목
-            text: param.text // 메일 내용
+            html: param.html // 메일 내용
         };
 
         // 메일 발송    
