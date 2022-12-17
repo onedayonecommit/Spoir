@@ -6,7 +6,7 @@ module.exports.LoginAT = async (user_email) => {
         const getAT = jwt.sign({
             user_email
         }, process.env.AT_SIGN_KEY, {
-            expiresIn: "1h",
+            expiresIn: "30d",
             issuer: "tripot"
         })
         return getAT
@@ -21,7 +21,7 @@ module.exports.LoginRT = async (user_email) => {
         const getRT = jwt.sign({
             user_email
         }, process.env.RT_SIGN_KEY, {
-            expiresIn: "14d",
+            expiresIn: "90d",
             issuer: "tripot"
         })
         return getRT
