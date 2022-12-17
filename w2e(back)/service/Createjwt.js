@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken');
 
+/** 로그인 했을 때 토큰 */
 module.exports.LoginAT = async (user_email) => {
     try {
         const getAT = jwt.sign({
@@ -14,6 +15,7 @@ module.exports.LoginAT = async (user_email) => {
     }
 }
 
+/** 로그인 후 리프레쉬 현재는 안쓸거같음 */
 module.exports.LoginRT = async (user_email) => {
     try {
         const getRT = jwt.sign({
@@ -28,9 +30,10 @@ module.exports.LoginRT = async (user_email) => {
     }
 }
 
+/** 인증번호 통과했을 때 1시간 제한 및 인증성공 확인서 */
 module.exports.SignupAT = async (user_email) => {
     try {
-        const getSignupAT = await jwt.sign({
+        const getSignupAT = jwt.sign({
             user_email
         }, process.env.AT_SIGNUP_KEY, {
             expiresIn: "1h",

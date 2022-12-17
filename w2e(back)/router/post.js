@@ -1,26 +1,17 @@
-const express = require("express");
 const { Test, Friend, User } = require("../models");
 const { createClient } = require("redis");
-const { Addtest } = require("../service/Addtest");
-const { Checkmail } = require("../service/Checkemail");
-const { GenerateRandomAuth } = require("../service/Generateauth");
-const { UserLogin } = require("../service/Login");
-const { Requestaddfriend, Acceptaddfriend, Refuseaddfriend } = require("../service/Managefriends");
-const { MyfriendsSearch } = require("../service/Myfriendsearch");
-const { Mypageinfo } = require("../service/Mypage");
-const { Regist_wallet_address } = require("../service/RegistWallet");
-const { SignUp } = require("../service/Signup");
-const { Addtoken } = require("../service/Tokenstack");
-const { SignupAT } = require("../service/Createjwt");
-const router = express.Router();
+const multer = require("multer");
+const upload = require('../middlewares/Imagefilter');
+const { Addtest, Checkmail, GenerateRandomAuth, UserLogin, Requestaddfriend, Acceptaddfriend, Refuseaddfriend, MyfriendsSearch, Mypageinfo, Regist_wallet_address, SignUp, Addtoken, SignupAT } = require("../service");
+const router = require("express").Router();
 const client = createClient();
 client.connect();
 
-
 /** 회원가입 */
 router.post("/signup", async (req, res) => {
-    const { user_email, user_name } = req.body;
-    await SignUp(user_email, user_name, res);
+    const { accesstoken, user_name } = req.body;
+    console.log(accesstoken, user_name);
+    await SignUp(accesstoken, user_name, res);
 })
 
 /** 로그인 */
@@ -80,11 +71,12 @@ router.post("/check/email", async (req, res) => {
 
 /** 인증번호 체크 */
 router.post("/check/authnumber", async (req, res) => {
+    console.log(req.body);
     const { user_email, authnumber } = req.body;
     if (await client.get(user_email) == authnumber) {
         res.send({
             checkauthstatus: true,
-            signupchecktoken: await SignupAT(user_email)
+            token: await SignupAT(user_email)
         })
         client.flushAll()
     }
@@ -104,5 +96,23 @@ router.post("/myfriends/search", async (req, res) => {
 /** 친구 추가 test */
 router.post("/test", (req, res) => {
     Addtest()
+})
+
+/** 프로필 이미지 업로드 */
+router.post("/set/user/profile_image", upload, async (req, res) => {
+    const { accesstoken } = req.body;
+    try {
+        // blob형태를 base64로 변환
+        const imgData = fs
+            .readFileSync(`app${req.file.path.split("app")[1]}`)
+            .toString("base64");
+
+        // db에 path 저장
+        await User.update({ user_profile_image: imgData }, { where: { user_email: accesstoken } });
+        res.json({ path: imgData });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
+    }
+
 })
 module.exports = router
