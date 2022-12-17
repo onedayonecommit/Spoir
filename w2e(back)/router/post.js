@@ -1,10 +1,11 @@
-const { Test, Friend, User } = require("../models");
+const { Test, Friend, User, Macaddress } = require("../models");
 const { createClient } = require("redis");
 const multer = require("multer");
 const fs = require('fs');
 const upload = require('../middlewares/Imagefilter');
 const { Addtest, Checkmail, GenerateRandomAuth, UserLogin, Requestaddfriend, Acceptaddfriend, Refuseaddfriend, MyfriendsSearch, Mypageinfo, Regist_wallet_address, SignUp, Addtoken, SignupAT } = require("../service");
 const { LoginCheckmail } = require("../service/Checkemail");
+const { RegisterMacaddress } = require("../service/Registermacaddress");
 const router = require("express").Router();
 const client = createClient();
 client.connect();
@@ -132,19 +133,40 @@ router.post("/set/user/profile_image", upload, async (req, res) => {
     const { accesstoken } = req.body;
     try {
         // blob형태를 base64로 변환
-        const imgData = fs
-            .readFileSync(`app${req.file.path.split("app")[1]}`)
-            .toString("base64");
-
+        console.log('encoding start')
+        // const imgData = fs
+        //     .readFileSync(`uploads${req.file.path.split("uploads")[1]}`)
+        //     .toString("base64");
+        // fs
+        // .readFileSync(`app${req.file.path.split("app")[1]}`)
+        // .toString("base64");
+        // console.log(imgData);
         // db에 path 저장
-        await User.update({ user_profile_image: imgData }, { where: { user_email: accesstoken } });
+        await User.update({ user_profile_image: req.file.path }, { where: { user_email: "zxz4790@gmail.com" } }).then((e) => {
+            console.log("success")
+        }).catch(err => console.log(err))
         res.json({ path: imgData });
     } catch (err) {
         res.status(400).json({ success: false, message: err.message });
     }
 })
 
-router.post("/claim/save/mac/address", (req, res) => {
+router.post("/claim/save/mac/address", async (req, res) => {
+    const { mac_address, spot_id } = req.body;
+    console.log(mac_address, spot_id)
+    await RegisterMacaddress(mac_address, spot_id, res);
+})
 
+router.post("/image", (req, res) => {
+    User.findAll({ where: { user_email: "zxz4790@gmail.com" } }).then((e) => {
+        console.log(e[0].user_profile_image.toString("utf-8"))
+    })
+})
+
+router.get("/test", (req, res) => {
+    const { user_email } = req.body;
+    User.findOne({ where: { user_email } }).then((e) => {
+
+    })
 })
 module.exports = router

@@ -1,8 +1,8 @@
 const multer = require("multer");
 
-/** 확장자가 jpg,jpeg,png,gif만 걸러주는 함수 */
+/** 확장자가 jpg,jpeg,png만 걸러주는 함수 */
 const imageFilter = (req, file, cb) => {
-    if (!file.originalname.match(/\.(jpg|jpeg|png|gif)$/)) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
         return cb(new Error("Only image files are allowed!"));
     }
     cb(null, true);
@@ -22,6 +22,6 @@ var storage = multer.diskStorage({
 /** 업로드 함수 */
 var uploadFile = multer({ storage: storage, fileFilter: imageFilter }).single(
     "photo"
-);
+)
 
 module.exports = uploadFile;

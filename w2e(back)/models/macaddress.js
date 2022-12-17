@@ -12,6 +12,9 @@ class Macaddress extends Sequelize.Model {
             today_mac_address: {
                 allowNull: false,
                 type: Sequelize.STRING(20)
+            }, spot_id: {
+                allowNull: false,
+                type: Sequelize.INTEGER
             }
         }, {
             sequelize,
