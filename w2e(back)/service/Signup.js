@@ -1,5 +1,4 @@
 const { User } = require("../models")
-const bcrypt = require("bcrypt");
 const { Checkaccesstoken, CheckSignupaccesstoken } = require("./Jwtcheck");
 module.exports.SignUp = async (accesstoken, user_name, res) => {
     console.log(accesstoken)

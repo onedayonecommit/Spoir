@@ -126,9 +126,10 @@ router.post("/test", (req, res) => {
 
 /** 프로필 이미지 업로드 */
 router.post("/set/user/profile_image", upload, async (req, res) => {
-    const { accesstoken } = req.body;
+    console.log("req.body임!!!!!!!!!!", req.body)
     console.log("req.files임!!!", req.files)
     console.log("얘는 req.file임!!!", req.file)
+    const { accesstoken } = req.body;
     try {
         // blob형태를 base64로 변환
         const imgData = fs
@@ -141,5 +142,9 @@ router.post("/set/user/profile_image", upload, async (req, res) => {
     } catch (err) {
         res.status(400).json({ success: false, message: err.message });
     }
+})
+
+router.post("/claim/save/mac/address", (req, res) => {
+
 })
 module.exports = router
