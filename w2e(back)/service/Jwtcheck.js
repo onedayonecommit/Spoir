@@ -9,3 +9,12 @@ module.exports.Checkaccesstoken = async (accesstoken, res) => {
         return false
     }
 }
+
+module.exports.CheckSignupaccesstoken = async (accesstoken, res) => {
+    try {
+        const Signup_AT_result = jwt.verify(accesstoken, process.env.AT_SIGNUP_KEY)
+        return Signup_AT_result
+    } catch (error) {
+        return false
+    }
+}

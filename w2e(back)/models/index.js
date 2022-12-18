@@ -4,6 +4,7 @@ const User = require("./user");
 const Test = require("./test");
 const Friend = require("./friends");
 const Pendingfriend = require("./pendingfriend");
+const Macaddress = require("./macaddress");
 
 const sequelize = new Sequelize(
     config.dev.database,
@@ -20,10 +21,12 @@ db.User = User
 db.Test = Test
 db.Friend = Friend;
 db.Pendingfriend = Pendingfriend;
+db.Macaddress = Macaddress;
 
 User.init(sequelize);
 Test.init(sequelize);
 Friend.init(sequelize);
 Pendingfriend.init(sequelize);
+Macaddress.init(sequelize);
 
 module.exports = db;

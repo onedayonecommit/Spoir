@@ -8,7 +8,8 @@ module.exports.Mypageinfo = async (accesstoken, res) => {
             res.send({
                 user_email: e.user_email,
                 user_wallet_address: e.user_wallet_address,
-                user_name: e.user_name
+                user_name: e.user_name,
+                uesr_profile_image: e.uesr_profile_image
             })
         })
     }
