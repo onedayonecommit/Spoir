@@ -1,5 +1,4 @@
 const { Friend, User } = require("../models")
-const { Checkaccesstoken } = require("./Jwtcheck");
 const { MyfriendsSearch2 } = require("./Myfriendsearch2");
 
 module.exports.MyfriendsSearch = async (user_email, res) => {
