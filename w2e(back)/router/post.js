@@ -12,6 +12,7 @@ client.connect();
 
 /** 회원가입 */
 router.post("/signup", async (req, res) => {
+    console.log(req.body);
     const { accesstoken, user_name } = req.body;
     console.log(accesstoken, user_name);
     await SignUp(accesstoken, user_name, res);
@@ -37,10 +38,13 @@ router.post("/check/email", async (req, res) => {
 router.post("/check/authnumber", async (req, res) => {
     console.log(req.body);
     const { user_email, authnumber } = req.body;
+    console.log("씨발!!", await client.get(user_email))
     if (await client.get(user_email) == authnumber) {
+        const token = await SignupAT(user_email)
+        console.log(token)
         res.send({
             checkauthstatus: true,
-            token: await SignupAT(user_email)
+            token
         })
         client.flushAll()
     }
@@ -71,7 +75,6 @@ router.post("/check/login", async (req, res) => {
 /** 인증번호 확인 후 로그인 처리 */
 router.post("/login", async (req, res) => {
     const { user_email, authnumber } = req.body;
-    console.log(authnumber);
     console.log(await client.get(`${user_email}login`))
     if (await client.get(`${user_email}login`) == authnumber) {
         await UserLogin(user_email, res);
@@ -81,6 +84,15 @@ router.post("/login", async (req, res) => {
             loginstatus: false
         })
     }
+})
+
+/** 변경된 로그인 방식 */
+router.post("/login2", async (req, res) => {
+    const { accesstoken } = req.body;
+    const accesstoken1 = accesstoken.substr(10, 191)
+    const user_email = await Checkaccesstoken(accesstoken1);
+    console.log(user_email)
+    if (user_email !== false) res.send({ login2status: true, user_email })
 })
 
 /** 지갑주소 등록 현재 안씀

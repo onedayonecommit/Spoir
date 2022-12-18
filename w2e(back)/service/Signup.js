@@ -1,4 +1,5 @@
-const { User } = require("../models")
+const { User } = require("../models");
+const { LoginAT } = require("./Createjwt");
 const { Checkaccesstoken, CheckSignupaccesstoken } = require("./Jwtcheck");
 module.exports.SignUp = async (accesstoken, user_name, res) => {
     console.log(accesstoken)
@@ -11,9 +12,10 @@ module.exports.SignUp = async (accesstoken, user_name, res) => {
                     user_email: verify.user_email,
                     user_name,
                     user_profile_image: "uploads/default.png"
-                }).then((e) => {
+                }).then(async (e) => {
                     res.send({
                         signupstatus: true,
+                        userToken: await LoginAT(verify.user_email)
                     })
                 }).catch((error) => {
                     res.send({
@@ -35,4 +37,3 @@ module.exports.SignUp = async (accesstoken, user_name, res) => {
         })
     }
 }
-
