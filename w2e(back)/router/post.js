@@ -166,10 +166,10 @@ router.post("/image", (req, res) => {
 })
 
 /** 테스트 함수 */
-router.get("/test", (req, res) => {
-    const { user_email } = req.body;
-    User.findOne({ where: { user_email } }).then((e) => {
+// router.get("/test", (req, res) => {
+//     const { user_email } = req.body;
+//     User.findOne({ where: { user_email } }).then((e) => {
 
-    })
-})
+//     })
+// })
 module.exports = router
