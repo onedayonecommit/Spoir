@@ -9,7 +9,8 @@ module.exports.SignUp = async (accesstoken, user_name, res) => {
             User.findOne({ where: { user_email: verify.user_email } }).then((e) => {
                 return e == null ? User.create({
                     user_email: verify.user_email,
-                    user_name
+                    user_name,
+                    user_profile_image: "uploads/default.png"
                 }).then((e) => {
                     res.send({
                         signupstatus: true,
@@ -34,3 +35,4 @@ module.exports.SignUp = async (accesstoken, user_name, res) => {
         })
     }
 }
+

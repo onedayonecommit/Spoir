@@ -32,7 +32,7 @@ class User extends Sequelize.Model {
                 type: Sequelize.STRING(45)
             }, user_profile_image: {
                 type: Sequelize.BLOB("long"),
-                allowNull: true
+                allowNull: true,
             }
         }, {
             sequelize,

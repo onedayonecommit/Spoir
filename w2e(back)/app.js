@@ -10,7 +10,6 @@ app.use('/users', express.static('uploads'));
 app.use(cors());
 app.use(post)
 
-
 setInterval(async () => {
     if (await Getseconds() % 86400 == 0) {
         console.log("utc 정각",)

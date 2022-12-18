@@ -17,6 +17,40 @@ router.post("/signup", async (req, res) => {
     await SignUp(accesstoken, user_name, res);
 })
 
+/** 회원가입 전 메일 중복확인 및 인증번호 발송 */
+router.post("/check/email", async (req, res) => {
+    const { user_email } = req.body;
+    const authnumber = GenerateRandomAuth();
+    client.set(`${user_email}`, `${authnumber}`, {
+        EX: 300,
+        NX: true
+    });
+    mailoption = {
+        toEmail: user_email,
+        subject: "tripot 메일 인증번호 입니다.",
+        html: `반갑습니다 Tripot 입니다. 아래 인증번호 6자리 입력바랍니다. </br> <h1>${authnumber}</h1>`
+    }
+    await Checkmail(mailoption, authnumber, res);
+})
+
+/** 회원가입 인증번호 체크 */
+router.post("/check/authnumber", async (req, res) => {
+    console.log(req.body);
+    const { user_email, authnumber } = req.body;
+    if (await client.get(user_email) == authnumber) {
+        res.send({
+            checkauthstatus: true,
+            token: await SignupAT(user_email)
+        })
+        client.flushAll()
+    }
+    else {
+        res.send({
+            checkauthstatus: false
+        })
+    }
+})
+
 /** 로그인 메일인증번호 */
 router.post("/check/login", async (req, res) => {
     const { user_email } = req.body;
@@ -80,40 +114,6 @@ router.post("/friend/refuse", async (req, res) => {
     await Refuseaddfriend(accesstoken, user_email, res);
 })
 
-/** 회원가입 전 메일 중복확인 및 인증번호 발송 */
-router.post("/check/email", async (req, res) => {
-    const { user_email } = req.body;
-    const authnumber = GenerateRandomAuth();
-    client.set(`${user_email}`, `${authnumber}`, {
-        EX: 30,
-        NX: true
-    });
-    mailoption = {
-        toEmail: user_email,
-        subject: "tripot 메일 인증번호 입니다.",
-        html: `반갑습니다 Tripot 입니다. 아래 인증번호 6자리 입력바랍니다. </br> <h1>${authnumber}</h1>`
-    }
-    await Checkmail(mailoption, res);
-})
-
-/** 인증번호 체크 */
-router.post("/check/authnumber", async (req, res) => {
-    console.log(req.body);
-    const { user_email, authnumber } = req.body;
-    if (await client.get(user_email) == authnumber) {
-        res.send({
-            checkauthstatus: true,
-            token: await SignupAT(user_email)
-        })
-        client.flushAll()
-    }
-    else {
-        res.send({
-            checkauthstatus: false
-        })
-    }
-})
-
 /** 친구 목록 보내주기 */
 router.post("/myfriends/search", async (req, res) => {
     const { user_email } = req.body;
@@ -151,18 +151,21 @@ router.post("/set/user/profile_image", upload, async (req, res) => {
     }
 })
 
+/** 맥 어드레스 디비 저장 하루에 한번씩 초기화 */
 router.post("/claim/save/mac/address", async (req, res) => {
     const { mac_address, spot_id } = req.body;
     console.log(mac_address, spot_id)
     await RegisterMacaddress(mac_address, spot_id, res);
 })
 
+/** image 테스트 */
 router.post("/image", (req, res) => {
-    User.findAll({ where: { user_email: "zxz4790@gmail.com" } }).then((e) => {
+    User.findAll({ where: { user_email: "rudghks09@naver.com" } }).then((e) => {
         console.log(e[0].user_profile_image.toString("utf-8"))
     })
 })
 
+/** 테스트 함수 */
 router.get("/test", (req, res) => {
     const { user_email } = req.body;
     User.findOne({ where: { user_email } }).then((e) => {
