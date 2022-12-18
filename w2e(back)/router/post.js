@@ -3,7 +3,7 @@ const { createClient } = require("redis");
 const multer = require("multer");
 const fs = require('fs');
 const upload = require('../middlewares/Imagefilter');
-const { Addtest, Checkmail, GenerateRandomAuth, UserLogin, Requestaddfriend, Acceptaddfriend, Refuseaddfriend, MyfriendsSearch, Mypageinfo, Regist_wallet_address, SignUp, Addtoken, SignupAT } = require("../service");
+const { Addtest, Checkmail, GenerateRandomAuth, UserLogin, Requestaddfriend, Acceptaddfriend, Refuseaddfriend, MyfriendsSearch, Mypageinfo, Regist_wallet_address, SignUp, Addtoken, SignupAT, Checkaccesstoken } = require("../service");
 const { LoginCheckmail } = require("../service/Checkemail");
 const { RegisterMacaddress } = require("../service/Registermacaddress");
 const router = require("express").Router();
@@ -127,13 +127,30 @@ router.post("/test", (req, res) => {
 
 /** 프로필 이미지 업로드 */
 router.post("/set/user/profile_image", upload, async (req, res) => {
-    console.log("req.body임!!!!!!!!!!", req.body)
-    console.log("req.files임!!!", req.files)
-    console.log("얘는 req.file임!!!", req.file)
     const { accesstoken } = req.body;
     try {
+        const user_email = await Checkaccesstoken(accesstoken);
+        console.log(user_email);
+        // const imgData = fs
+        //     .readFileSync(`uploads${req.file.path.split("uploads")[1]}`)
+        //     .toString("base64");
+        // fs
+        // .readFileSync(`app${req.file.path.split("app")[1]}`)
+        // .toString("base64");
+        await User.update({ user_profile_image: req.file.path }, { where: { user_email } }).then((e) => {
+            console.log("success")
+        }).catch(err => console.log(err))
+        res.json({ path: imgData });
+    } catch (err) {
+        res.status(400).json({ success: false, message: err.message });
+    }
+})
+
+/** 스팟 이미지 등록 */
+router.post("/set/spot_image", upload, async (req, res) => {
+    const { spot_id } = req.body;
+    try {
         // blob형태를 base64로 변환
-        console.log('encoding start')
         // const imgData = fs
         //     .readFileSync(`uploads${req.file.path.split("uploads")[1]}`)
         //     .toString("base64");
@@ -142,7 +159,7 @@ router.post("/set/user/profile_image", upload, async (req, res) => {
         // .toString("base64");
         // console.log(imgData);
         // db에 path 저장
-        await User.update({ user_profile_image: req.file.path }, { where: { user_email: "zxz4790@gmail.com" } }).then((e) => {
+        await User.update({ spot_image: req.file.path }, { where: { spot_id } }).then((e) => {
             console.log("success")
         }).catch(err => console.log(err))
         res.json({ path: imgData });

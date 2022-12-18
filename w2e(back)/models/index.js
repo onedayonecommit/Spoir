@@ -5,6 +5,7 @@ const Test = require("./test");
 const Friend = require("./friends");
 const Pendingfriend = require("./pendingfriend");
 const Macaddress = require("./macaddress");
+const Spot = require("./spot");
 
 const sequelize = new Sequelize(
     config.dev.database,
@@ -22,11 +23,13 @@ db.Test = Test
 db.Friend = Friend;
 db.Pendingfriend = Pendingfriend;
 db.Macaddress = Macaddress;
+db.Spot = Spot;
 
 User.init(sequelize);
 Test.init(sequelize);
 Friend.init(sequelize);
 Pendingfriend.init(sequelize);
 Macaddress.init(sequelize);
+Spot.init(sequelize);
 
 module.exports = db;
