@@ -11,7 +11,6 @@ const imageFilter = (req, file, cb) => {
 /** 프론트로부터 받아온 프로필이미지 서버 스토리지에 저장하는 함수 */
 var storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        console.log(__dirname);
         cb(null, "uploads/");
     },
     filename: (req, file, cb) => {
