@@ -4,7 +4,6 @@ const { SignUp, GenerateRandomAuth, Checkmail, SignupAT } = require("../service"
 /** 회원가입 */
 router.post("/signup", async (req, res) => {
     const { accesstoken, user_name } = req.body;
-    console.log(accesstoken, user_name);
     await SignUp(accesstoken, user_name, res);
 })
 
@@ -26,7 +25,6 @@ router.post("/check/email", async (req, res) => {
 
 /** 회원가입 인증번호 체크 */
 router.post("/check/authnumber", async (req, res) => {
-    console.log(req.body);
     const { user_email, authnumber } = req.body;
     if (await client.get(user_email) == authnumber) {
         res.send({
